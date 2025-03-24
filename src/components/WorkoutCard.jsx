@@ -55,7 +55,7 @@ export default function WorkoutCard(props) {
 
       toast.success('Workout saved successfully!', {
         position: 'top-right',
-        autoClose: 2000,
+        autoClose: 1000,
         hideProgressBar: true,
       });
 
@@ -66,7 +66,7 @@ export default function WorkoutCard(props) {
     } catch (error) {
       toast.error('Failed to save workout. Please try again.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
       });
       console.error('Error saving workout:', error);
@@ -91,7 +91,7 @@ export default function WorkoutCard(props) {
     } catch (error) {
       toast.error('Failed to complete workout. Please try again.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
       });
       console.error('Error completing workout:', error);
@@ -104,7 +104,7 @@ export default function WorkoutCard(props) {
     if (trimmedWeightType !== 'kg' && trimmedWeightType !== 'lbs') {
       toast.error('Only kg and lbs are supported. Check your input again.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
       });
       return;
@@ -119,7 +119,7 @@ export default function WorkoutCard(props) {
     if (trimmedWeightType !== 'kg' && trimmedWeightType !== 'lbs') {
       toast.error('Only kg and lbs are supported. Check your input again.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
       });
       return;
@@ -128,7 +128,7 @@ export default function WorkoutCard(props) {
     if (Object.keys(weights).length !== workout.length) {
       toast.error('Please fill in all weight values.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
       });
       return;
