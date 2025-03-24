@@ -14,7 +14,7 @@ export default function Layout(props){
             <p>Built By <a target="_blank" 
             href="https://www.arunkrishna.com">Arunkrishna</a>
             <br />Styled with<a target="_blank" 
-            href="https://www.fatacss.smoljames.com">FantaCss</a></p>
+            href="https://www.fantacss.smoljames.com">FantaCss</a></p>
         </footer>
     )
 
