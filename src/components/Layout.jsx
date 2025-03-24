@@ -4,8 +4,8 @@ export default function Layout(props){
 
     const header = (
         <header>
-            <h1 className="text-gradient">The Brogram</h1>
-            <p><strong>The 30 Simple Workouts Programs</strong></p>
+            <h1 className="text-gradient">OptimumRise</h1>
+            <p><strong>The 30 Simple Workouts Programs for your rise into the fitness world.</strong></p>
         </header>
     )
 

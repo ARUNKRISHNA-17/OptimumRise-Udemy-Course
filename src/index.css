@@ -107,7 +107,7 @@ h3,
 }
 
 .weight-input {
-    grid-column: span 2 / span 2;
+    grid-column: span 1 / span 1;
 }
 
 .workout-buttons {
@@ -240,4 +240,9 @@ button.help-icon:hover {
     .workout-container {
         grid-column: span 5 / span 5;
     }
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
