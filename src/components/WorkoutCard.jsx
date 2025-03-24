@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function WorkoutCard(props) {
-  const { trainingPlan, workoutIndex, type, dayNum, icon, savedWeights } = props;
+  const { trainingPlan, workoutIndex, type, dayNum, icon, savedWeights, onComplete, onSaveCallback } = props; //added onSaveCallback
 
   const { warmup, workout } = trainingPlan || {};
   const [showExerciseDescription, setShowExerciseDescription] = useState(null);
@@ -55,9 +55,14 @@ export default function WorkoutCard(props) {
 
       toast.success('Workout saved successfully!', {
         position: 'top-right',
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: true,
       });
+
+      if (onSaveCallback) {
+        onSaveCallback(index, data); //call back to parent to update state.
+      }
+
     } catch (error) {
       toast.error('Failed to save workout. Please try again.', {
         position: 'top-right',
@@ -76,9 +81,13 @@ export default function WorkoutCard(props) {
 
       toast.success('Workout completed!', {
         position: 'top-right',
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: true,
       });
+
+      if (onComplete) {
+        onComplete(index, newObj);
+      }
     } catch (error) {
       toast.error('Failed to complete workout. Please try again.', {
         position: 'top-right',
@@ -88,6 +97,7 @@ export default function WorkoutCard(props) {
       console.error('Error completing workout:', error);
     }
   }
+
   const handleSaveClick = () => {
     const trimmedWeightType = weightType.trim().toLowerCase();
 
@@ -104,7 +114,9 @@ export default function WorkoutCard(props) {
   };
 
   const handleCompleteClick = () => {
-    if (weightType.toLowerCase() !== 'kg' && weightType.toLowerCase() !== 'lbs') {
+    const trimmedWeightType = weightType.trim().toLowerCase();
+
+    if (trimmedWeightType !== 'kg' && trimmedWeightType !== 'lbs') {
       toast.error('Only kg and lbs are supported. Check your input again.', {
         position: 'top-right',
         autoClose: 5000,

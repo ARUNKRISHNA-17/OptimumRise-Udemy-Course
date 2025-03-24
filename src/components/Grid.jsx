@@ -5,12 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Grid() {
-  const [savedWorkouts, setSavedWorkouts] = useState(null);
+  const [savedWorkouts, setSavedWorkouts] = useState({});
   const [selectedWorkout, setSelectedWorkout] = useState(null);
-  const completedWorkouts = Object.keys(savedWorkouts || {}).filter((val) => {
-    const entry = savedWorkouts[val];
-    return entry.isComplete;
-  });
 
   useEffect(() => {
     try {
@@ -32,30 +28,63 @@ export default function Grid() {
     }
   }, []);
 
+  const handleWorkoutComplete = (completedWorkoutIndex, completedData) => {
+    const nextWorkoutIndex = completedWorkoutIndex + 1;
+    if (nextWorkoutIndex < Object.keys(training_plan).length) {
+    }
+
+    setSavedWorkouts((prevSavedWorkouts) => ({
+      ...prevSavedWorkouts,
+      [completedWorkoutIndex]: {
+        ...completedData,
+        isComplete: true,
+      },
+    }));
+
+    localStorage.setItem('brogram', JSON.stringify({
+      ...savedWorkouts,
+      [completedWorkoutIndex]: {
+        ...completedData,
+        isComplete: true,
+      }
+    }));
+  };
+
+  const handleSaveCallback = (index, data) => {
+    setSavedWorkouts((prevSavedWorkouts) => ({
+      ...prevSavedWorkouts,
+      [index]: {
+        ...data,
+      },
+    }));
+  };
+
   return (
     <div className="training-plan-grid">
       {Object.keys(training_plan).map((workout, workoutIndex) => {
-        const isLocked = workoutIndex === 0 ? false : !completedWorkouts.includes(`${workoutIndex - 1}`);
-        console.log(workoutIndex, isLocked);
+        const workoutIndexNum = parseInt(workoutIndex);
+        const isLocked = workoutIndexNum === 0 ? false : !savedWorkouts?.[workoutIndexNum - 1]?.isComplete;
 
-        const type = workoutIndex % 3 === 0 ? 'Push' : workoutIndex % 3 === 1 ? 'Pull' : 'Legs';
+        const type = workoutIndexNum % 3 === 0 ? 'Push' : workoutIndexNum % 3 === 1 ? 'Pull' : 'Legs';
         const trainingPlan = training_plan[workoutIndex];
-        const dayNum = (workoutIndex / 8 <= 1) ? '0' + (workoutIndex + 1) : workoutIndex + 1;
-        const icon = workoutIndex % 3 === 0 ? (<i className='fa-solid fa-dumbbell'></i>) : (workoutIndex % 3 === 1 ? (<i className='fa-solid fa-weight-hanging'></i>) : (<i className='fa-solid fa-bolt'></i>));
+        const dayNum = (workoutIndexNum / 8 <= 1) ? '0' + (workoutIndexNum + 1) : workoutIndexNum + 1;
+        const icon = workoutIndexNum % 3 === 0 ? (<i className='fa-solid fa-dumbbell'></i>) : (workoutIndexNum % 3 === 1 ? (<i className='fa-solid fa-weight-hanging'></i>) : (<i className='fa-solid fa-bolt'></i>));
 
-        if (workoutIndex === selectedWorkout) {
-            return (
-              <WorkoutCard
-                savedWeights={savedWorkouts?.[workoutIndex]} // Pass the whole saved object
-                key={workoutIndex}
-                trainingPlan={trainingPlan}
-                type={type}
-                workoutIndex={workoutIndex}
-                icon={icon}
-                dayNum={dayNum}
-              />
-            );
-          }
+        if (workoutIndexNum === selectedWorkout) {
+          return (
+            <WorkoutCard
+              savedWeights={savedWorkouts?.[workoutIndexNum]}
+              key={workoutIndexNum}
+              trainingPlan={trainingPlan}
+              type={type}
+              workoutIndex={workoutIndexNum}
+              icon={icon}
+              dayNum={dayNum}
+              onComplete={handleWorkoutComplete}
+              onSaveCallback={handleSaveCallback} //add onSaveCallback
+            />
+          );
+        }
 
         return (
           <button
@@ -63,10 +92,10 @@ export default function Grid() {
               if (isLocked) {
                 return;
               }
-              setSelectedWorkout(workoutIndex);
+              setSelectedWorkout(workoutIndexNum);
             }}
             className={'card plan-card  ' + (isLocked ? 'inactive' : '')}
-            key={workoutIndex}
+            key={workoutIndexNum}
           >
             <div className='plan-card-header'>
               <p>Day {dayNum}</p>
