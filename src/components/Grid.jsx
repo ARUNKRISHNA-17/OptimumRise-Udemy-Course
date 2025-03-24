@@ -48,7 +48,11 @@ export default function Grid() {
       },
     }));
     setSelectedWorkout(null); // Reset selectedWorkout
+
+    // Re-evaluate and update lock status for subsequent workouts
+    updateLockStatus(index);
   };
+
 
   return (
     <div className="training-plan-grid">
@@ -73,7 +77,6 @@ export default function Grid() {
               dayNum={dayNum}
               onComplete={handleWorkoutComplete}
               onSaveCallback={handleSaveCallback}
-              setSelectedWorkout={setSelectedWorkout} // Pass the setter
             />
           );
         }

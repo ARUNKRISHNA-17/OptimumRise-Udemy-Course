@@ -20,17 +20,19 @@ export default function WorkoutCard(props) {
   }, [savedWeights]);
 
   function handleAddWeight(title, weight) {
+    const clampedWeight = Math.min(999, Math.max(0, weight));
     const newObj = {
       ...weights,
-      [title]: weight,
+      [title]: clampedWeight,
     };
     setWeights(newObj);
   }
 
   function handleAddWarmupWeight(title, weight) {
+    const clampedWeight = Math.min(999, Math.max(0, weight));
     const newObj = {
       ...warmupWeights,
-      [title]: weight,
+      [title]: clampedWeight,
     };
     setWarmupWeights(newObj);
   }
@@ -133,37 +135,35 @@ export default function WorkoutCard(props) {
         <h6>Sets</h6>
         <h6>Reps</h6>
         <h6 className="weight-input">Max Weight</h6>
-        {warmup.map((warmupExercise, warmupIndex) => {
-          return (
-            <React.Fragment key={warmupIndex}>
-              <div className="exercise-name">
-                <p>{warmupIndex + 1}. {warmupExercise.name}</p>
-                <button
-                  onClick={() => {
-                    setShowExerciseDescription({
-                      name: warmupExercise.name,
-                      description: exerciseDescriptions[warmupExercise.name],
-                    });
-                  }}
-                  className="help-icon"
-                >
-                  <i className="fa-regular fa-circle-question" />
-                </button>
-              </div>
-              <p className="exercise-info">{warmupExercise.sets}</p>
-              <p className="exercise-info">{warmupExercise.reps}</p>
-              <input
-                value={warmupWeights[warmupExercise.name] || ''}
-                onChange={(e) => {
-                  handleAddWarmupWeight(warmupExercise.name, e.target.value);
+        {warmup.map((warmupExercise, warmupIndex) => (
+          <React.Fragment key={warmupIndex}>
+            <div className="exercise-name">
+              <p>{warmupIndex + 1}. {warmupExercise.name}</p>
+              <button
+                onClick={() => {
+                  setShowExerciseDescription({
+                    name: warmupExercise.name,
+                    description: exerciseDescriptions[warmupExercise.name],
+                  });
                 }}
-                className="weight-input"
-                type="number"
-              />
-              <input className="weight-type" type="text" value={weightType} onChange={handleWeightTypeChange}/>
-            </React.Fragment>
-          );
-        })}
+                className="help-icon"
+              >
+                <i className="fa-regular fa-circle-question" />
+              </button>
+            </div>
+            <p className="exercise-info">{warmupExercise.sets}</p>
+            <p className="exercise-info">{warmupExercise.reps}</p>
+            <input
+              value={warmupWeights[warmupExercise.name] || ''}
+              onChange={(e) => {
+                handleAddWarmupWeight(warmupExercise.name, parseInt(e.target.value, 10) || 0);
+              }}
+              className="weight-input"
+              type="number"
+            />
+            <input className="weight-type" type="text" value={weightType} onChange={handleWeightTypeChange}/>
+          </React.Fragment>
+        ))}
       </div>
 
       <div className="workout-grid">
@@ -173,38 +173,36 @@ export default function WorkoutCard(props) {
         <h6>Sets</h6>
         <h6>Reps</h6>
         <h6 className="weight-input">Max Weight</h6>
-        {workout.map((workoutExercise, wIndex) => {
-          return (
-            <React.Fragment key={wIndex}>
-              <div className="exercise-name">
-                <p>{wIndex + 1}. {workoutExercise.name}</p>
-                <button
-                  onClick={() => {
-                    setShowExerciseDescription({
-                      name: workoutExercise.name,
-                      description: exerciseDescriptions[workoutExercise.name],
-                    });
-                  }}
-                  className="help-icon"
-                >
-                  <i className="fa-regular fa-circle-question" />
-                </button>
-              </div>
-              <p className="exercise-info">{workoutExercise.sets}</p>
-              <p className="exercise-info">{workoutExercise.reps}</p>
-              <input
-                value={weights[workoutExercise.name] || ''}
-                onChange={(e) => {
-                  handleAddWeight(workoutExercise.name, e.target.value);
+        {workout.map((workoutExercise, wIndex) => (
+          <React.Fragment key={wIndex}>
+            <div className="exercise-name">
+              <p>{wIndex + 1}. {workoutExercise.name}</p>
+              <button
+                onClick={() => {
+                  setShowExerciseDescription({
+                    name: workoutExercise.name,
+                    description: exerciseDescriptions[workoutExercise.name],
+                  });
                 }}
-                className="weight-input"
-                placeholder="Ex-14"
-                type="number"
-              />
-              <input className="weight-type" type="text" value={weightType} onChange={handleWeightTypeChange}/>
-            </React.Fragment>
-          );
-        })}
+                className="help-icon"
+              >
+                <i className="fa-regular fa-circle-question" />
+              </button>
+            </div>
+            <p className="exercise-info">{workoutExercise.sets}</p>
+            <p className="exercise-info">{workoutExercise.reps}</p>
+            <input
+              value={weights[workoutExercise.name] || ''}
+              onChange={(e) => {
+                handleAddWeight(workoutExercise.name, parseInt(e.target.value, 10) || 0);
+              }}
+              className="weight-input"
+              placeholder="Ex-14"
+              type="number"
+            />
+            <input className="weight-type" type="text" value={weightType} onChange={handleWeightTypeChange}/>
+          </React.Fragment>
+        ))}
       </div>
 
       <div className="workout-buttons">
