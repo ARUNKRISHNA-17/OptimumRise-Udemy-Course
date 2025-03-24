@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { exerciseDescriptions } from '../utils';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function WorkoutCard(props) {
-  const { trainingPlan, workoutIndex, type, dayNum, icon, savedWeights, onComplete, onSaveCallback } = props; //added onSaveCallback
+  const { trainingPlan, workoutIndex, type, dayNum, icon, savedWeights, onComplete, onSaveCallback, setSelectedWorkout } = props;
 
   const { warmup, workout } = trainingPlan || {};
   const [showExerciseDescription, setShowExerciseDescription] = useState(null);
@@ -53,22 +51,14 @@ export default function WorkoutCard(props) {
       };
       localStorage.setItem('brogram', JSON.stringify(newObj));
 
-      toast.success('Workout saved successfully!', {
-        position: 'top-right',
-        autoClose: 1000,
-        hideProgressBar: true,
-      });
-
       if (onSaveCallback) {
-        onSaveCallback(index, data); //call back to parent to update state.
+        onSaveCallback(index, data);
       }
 
+      if (setSelectedWorkout) {
+        setSelectedWorkout(null);
+      }
     } catch (error) {
-      toast.error('Failed to save workout. Please try again.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
       console.error('Error saving workout:', error);
     }
   }
@@ -79,21 +69,10 @@ export default function WorkoutCard(props) {
       newObj.isComplete = true;
       handleSave(index, newObj);
 
-      toast.success('Workout completed!', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: true,
-      });
-
       if (onComplete) {
         onComplete(index, newObj);
       }
     } catch (error) {
-      toast.error('Failed to complete workout. Please try again.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
       console.error('Error completing workout:', error);
     }
   }
@@ -102,11 +81,7 @@ export default function WorkoutCard(props) {
     const trimmedWeightType = weightType.trim().toLowerCase();
 
     if (trimmedWeightType !== 'kg' && trimmedWeightType !== 'lbs') {
-      toast.error('Only kg and lbs are supported. Check your input again.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
+      console.error('Only kg and lbs are supported. Check your input again.');
       return;
     }
 
@@ -117,20 +92,12 @@ export default function WorkoutCard(props) {
     const trimmedWeightType = weightType.trim().toLowerCase();
 
     if (trimmedWeightType !== 'kg' && trimmedWeightType !== 'lbs') {
-      toast.error('Only kg and lbs are supported. Check your input again.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
+      console.error('Only kg and lbs are supported. Check your input again.');
       return;
     }
 
     if (Object.keys(weights).length !== workout.length) {
-      toast.error('Please fill in all weight values.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
+      console.error('Please fill in all weight values.');
       return;
     }
 
@@ -253,7 +220,6 @@ export default function WorkoutCard(props) {
           Complete
         </button>
       </div>
-      <ToastContainer/>
     </div>
   );
 }

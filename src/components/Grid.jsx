@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { workoutProgram as training_plan } from '../utils/index.js';
 import WorkoutCard from './WorkoutCard.jsx';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function Grid() {
   const [savedWorkouts, setSavedWorkouts] = useState({});
@@ -10,20 +8,10 @@ export default function Grid() {
 
   useEffect(() => {
     try {
-      if (!localStorage) {
-        return;
+      if (localStorage && localStorage.getItem('brogram')) {
+        setSavedWorkouts(JSON.parse(localStorage.getItem('brogram')));
       }
-      let savedData = {};
-      if (localStorage.getItem('brogram')) {
-        savedData = JSON.parse(localStorage.getItem('brogram'));
-      }
-      setSavedWorkouts(savedData);
     } catch (error) {
-      toast.error('Failed to load saved workouts.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: true,
-      });
       console.error('Error loading saved workouts:', error);
     }
   }, []);
@@ -41,13 +29,15 @@ export default function Grid() {
       },
     }));
 
-    localStorage.setItem('brogram', JSON.stringify({
-      ...savedWorkouts,
-      [completedWorkoutIndex]: {
-        ...completedData,
-        isComplete: true,
-      }
-    }));
+    if (localStorage) {
+        localStorage.setItem('brogram', JSON.stringify({
+          ...savedWorkouts,
+          [completedWorkoutIndex]: {
+            ...completedData,
+            isComplete: true,
+          }
+        }));
+    }
   };
 
   const handleSaveCallback = (index, data) => {
@@ -57,6 +47,7 @@ export default function Grid() {
         ...data,
       },
     }));
+    setSelectedWorkout(null); // Reset selectedWorkout
   };
 
   return (
@@ -81,7 +72,8 @@ export default function Grid() {
               icon={icon}
               dayNum={dayNum}
               onComplete={handleWorkoutComplete}
-              onSaveCallback={handleSaveCallback} //add onSaveCallback
+              onSaveCallback={handleSaveCallback}
+              setSelectedWorkout={setSelectedWorkout} // Pass the setter
             />
           );
         }
@@ -109,7 +101,6 @@ export default function Grid() {
           </button>
         );
       })}
-      <ToastContainer />
     </div>
   );
 }
